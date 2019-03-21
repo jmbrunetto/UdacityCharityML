@@ -2,15 +2,15 @@
 Repositório referente ao promeiro projeto do curso de Machine learning da Udacity
 
 ## O que você aprenderá ao concluir este projeto:
-### Como identificar se o pré-processamento é necessário e como aplicá-lo.
-### Como estabelecer uma referência para uma solução do problema.
-### O que cada um dos vários algoritmos de aprendizagem supervisionada realiza, considerando um conjunto de dados específico.
-### Como avaliar se um candidato a modelo de solução é adequado ao problema.
+- Como identificar se o pré-processamento é necessário e como aplicá-lo.
+- Como estabelecer uma referência para uma solução do problema.
+- O que cada um dos vários algoritmos de aprendizagem supervisionada realiza, considerando um conjunto de dados específico.
+- Como avaliar se um candidato a modelo de solução é adequado ao problema.
 
 
 # Questões a serem respondidas
 
-##Exploring the Data
+## Exploring the Data
 *Data Exploration*
 
 > Student's implementation correctly calculates the following:
@@ -19,7 +19,7 @@ Repositório referente ao promeiro projeto do curso de Machine learning da Udaci
 - Number of individuals with income <=$50,000
 - Percentage of individuals with income > $50,000
 
-##Preparing the Data
+## Preparing the Data
 
 *Data Preprocessing*
 
@@ -43,7 +43,7 @@ Repositório referente ao promeiro projeto do curso de Machine learning da Udaci
 *Initial Model Evaluation*
 > Student correctly implements three supervised learning models and produces a performance visualization.
 
-##Improving Results
+## Improving Results
 
 ### Question 3:
 *Choosing the Best Model*
