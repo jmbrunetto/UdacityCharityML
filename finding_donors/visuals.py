@@ -5,8 +5,8 @@ import warnings
 warnings.filterwarnings("ignore", category = UserWarning, module = "matplotlib")
 #
 # Display inline matplotlib plots with IPython
-from IPython import get_ipython
-get_ipython().run_line_magic('matplotlib', 'inline')
+#from IPython import get_ipython
+#get_ipython().run_line_magic('matplotlib', 'inline')
 ###########################################
 
 import matplotlib.pyplot as pl
@@ -115,7 +115,7 @@ def evaluate(results, accuracy, f1):
     
     # Aesthetics
     pl.suptitle("Performance Metrics for Three Supervised Learning Models", fontsize = 16, y = 1.10)
-    pl.tight_layout()
+    pl.tight_layout(pad=20, h_pad=10)
     pl.show()
     
 
