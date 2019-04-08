@@ -460,66 +460,28 @@ for clf in [clf_A, clf_B, clf_C]:
 vs.evaluate(results, accuracy, fscore)
 
 
-# ----
-# ## Melhorando os resultados
-# Nesta seção final, você irá escolher o melhor entre os três modelos de aprendizado supervisionado para utilizar nos dados dos estudantes. Você irá então realizar uma busca grid para otimização em todo o conjunto de dados de treino (`X_train` e `y_train`) fazendo o tuning de pelo menos um parâmetro para melhorar o F-score anterior do modelo.
-
-# ### Questão 3 - Escolhendo o melhor modelo
-# 
-# * Baseado na validação anterior, em um ou dois parágrafos explique para a *CharityML* qual dos três modelos você acredita ser o mais apropriado para a tarefa de identificar indivíduos com remuneração anual superior à \$50,000.  
-# 
-# ** DICA: ** 
-# Analise o gráfico do canto inferior esquerdo da célula acima(a visualização criada através do comando `vs.evaluate(results, accuracy, fscore)`) e verifique o F score para o conjunto de testes quando 100% do conjunto de treino é utilizado. Qual modelo possui o maior score? Sua resposta deve abranger os seguintes pontos:
-# * métricas - F score no conjunto de testes quando 100% dos dados de treino são utilizados, 
-# * tempo de predição/treinamento 
-# * a adequação do algoritmo para este conjunto de dados.
-
-# **Resposta: **
-
-# ### Questão 4 - Descrevendo o modelo nos termos de Layman
-#  
-# * Em um ou dois parágrafos, explique para a *CharityML*, nos termos de layman, como o modelo final escolhido deveria funcionar. Garanta que você está descrevendo as principais vantagens do modelo, tais como o modo de treinar o modelo e como o modelo realiza a predição. Evite a utilização de jargões matemáticos avançados, como por exemplo a descrição de equações. 
-# 
-# ** DICA: **
-# 
-# Quando estiver explicando seu modelo, cite as fontes externas utilizadas, caso utilize alguma.
-
-# **Resposta: ** 
-
-# ### Implementação: Tuning do modelo
-# Refine o modelo escolhido. Utilize uma busca grid (`GridSearchCV`) com pleo menos um parâmetro importante refinado com pelo menos 3 valores diferentes. Você precisará utilizar todo o conjunto de treinamento para isso. Na célula de código abaixo, você precisará implementar o seguinte:
-# - Importar [`sklearn.model_selection.GridSearchCV`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html) e [`sklearn.metrics.make_scorer`](http://scikit-learn.org/stable/modules/generated/sklearn.metrics.make_scorer.html).
-# - Inicializar o classificador escolhido por você e armazená-lo em `clf`.
-#  - Configurar um `random_state` se houver um disponível para o mesmo estado que você configurou anteriormente.
-# - Criar um dicionário dos parâmetros que você quer otimizar para o modelo escolhido.
-#  - Exemplo: `parâmetro = {'parâmetro' : [lista de valores]}`.
-#  - **Nota:** Evite otimizar o parâmetro `max_features` se este parâmetro estiver disponível! 
-# - Utilize `make_scorer` para criar um objeto de pontuação `fbeta_score` (com $\beta = 0.5$).
-# - Realize a busca gride no classificador `clf` utilizando o `'scorer'` e armazene-o na variável `grid_obj`.   
-# - Adeque o objeto da busca grid aos dados de treino (`X_train`, `y_train`) e armazene em `grid_fit`.
-# 
-# **Nota:** Dependendo do algoritmo escolhido e da lista de parâmetros, a implementação a seguir pode levar algum tempo para executar! 
-
-# In[ ]:
-
-
 # TODO: Importar 'GridSearchCV', 'make_scorer', e qualquer biblioteca necessária
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import make_scorer, fbeta_score
 
 # TODO: Inicializar o classificador
-clf = None
+clf = DecisionTreeClassifier(random_state=0)
 
 # TODO: Criar a lista de parâmetros que você quer otimizar, utilizando um dicionário, caso necessário.
 # HINT: parameters = {'parameter_1': [value1, value2], 'parameter_2': [value1, value2]}
-parameters = None
+parameters = {'criterion': ['gini', 'entropy'],
+              'splitter': ['best', 'random'],
+              'max_depth': [2, 3, 4, 5, 10, 25, 50],
+              'min_samples_split': [2, 3, 4, 8, 16, 32]}
 
 # TODO: Criar um objeto fbeta_score utilizando make_scorer()
-scorer = None
+scorer = make_scorer(fbeta_score, beta=0.5)
 
-# TODO: Realizar uma busca grid no classificador utilizando o 'scorer' como o método de score no GridSearchCV() 
-grid_obj = None
+# TODO: Realizar uma busca grid no classificador utilizando o 'scorer' como o método de score no GridSearchCV()
+grid_obj = GridSearchCV(clf, parameters, scorering=0)
 
-# TODO: Adequar o objeto da busca grid como os dados para treinamento e encontrar os parâmetros ótimos utilizando fit() 
-grid_fit = None
+# TODO: Adequar o objeto da busca grid como os dados para treinamento e encontrar os parâmetros ótimos utilizando fit()
+grid_fit = grid_obj.fit(X_train, y_train)
 
 # Recuperar o estimador
 best_clf = grid_fit.best_estimator_
@@ -536,113 +498,6 @@ print("\nOptimized Model\n------")
 print("Final accuracy score on the testing data: {:.4f}".format(accuracy_score(y_test, best_predictions)))
 print("Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, best_predictions, beta = 0.5)))
 
+model = DecisionTreeClassifier()
 
-# ### Questão 5 - Validação final do modelo
-# 
-# * Qual é a accuracy e o F-score do modelo otimizado utilizando os dados de testes?
-# * Estes scores são melhores ou piores do que o modelo antes da otimização? 
-# * Como os resultados do modelo otimizado se comparam aos benchmarks do naive predictor que você encontrou na **Questão 1**?_
-# 
-# **Nota:** Preencha a tabela abaixo com seus resultados e então responda as questões no campo **Resposta** 
-
-# #### Resultados:
-# 
-# |     Metric     | Unoptimized Model | Optimized Model |
-# | :------------: | :---------------: | :-------------: | 
-# | Accuracy Score |                   |                 |
-# | F-score        |                   |   EXAMPLE       |
-# 
-
-# **Resposta: **
-
-# ----
-# ## Importância dos atributos
-# 
-# Uma tarefa importante quando realizamos aprendizado supervisionado em um conjunto de dados como os dados do censo que estudamos aqui é determinar quais atributos fornecem maior poder de predição. Focando no relacionamento entre alguns poucos atributos mais importantes e na label alvo nós simplificamos muito o nosso entendimento do fenômeno, que é a coisa mais importante a se fazer. No caso deste projeto, isso significa que nós queremos identificar um pequeno número de atributos que possuem maior chance de predizer se um indivíduo possui renda anual superior à \$50,000.
-# 
-# Escolha um classificador da scikit-learn (e.x.: adaboost, random forests) que possua o atributo `feature_importance_`, que é uma função que calcula o ranking de importância dos atributos de acordo com o classificador escolhido. Na próxima célula python ajuste este classificador para o conjunto de treinamento e utilize este atributo para determinar os 5 atributos mais importantes do conjunto de dados do censo.
-
-# ### Questão 6 - Observação da Relevância dos Atributos
-# Quando **Exploramos os dados**, vimos que existem treze atributos disponíveis para cada registro nos dados do censo. Destes treze atributos, quais os 5 atributos que você acredita que são os mais importantes para predição e em que ordem você os ranquearia? Por quê?
-
-# **Resposta:**
-
-# ### Implementação - Extraindo a importância do atributo
-# Escolha um algoritmo de aprendizado supervisionado da `sciki-learn` que possui o atributo `feature_importance_` disponível. Este atributo é uma função que ranqueia a importância de cada atributo dos registros do conjunto de dados quando realizamos predições baseadas no algoritmo escolhido.
-# 
-# Na célula de código abaixo, você precisará implementar o seguinte:
-#  - Importar um modelo de aprendizado supervisionado da sklearn se este for diferente dos três usados anteriormente. 
-#  - Treinar o modelo supervisionado com todo o conjunto de treinamento.
-#  - Extrair a importância dos atributos utilizando `'.feature_importances_'`.
-
-# In[ ]:
-
-
-# TODO: Importar um modelo de aprendizado supervisionado que tenha 'feature_importances_'
-
-
-# TODO: Treinar o modelo utilizando o conjunto de treinamento com .fit(X_train, y_train)
-model = None
-
-# TODO: Extrair a importância dos atributos utilizando .feature_importances_ 
-importances = None
-
-# Plotar
-vs.feature_plot(importances, X_train, y_train)
-
-
-# ### Questão 7 - Extraindo importância dos atributos
-# 
-# Observe a visualização criada acima que exibe os cinco atributos mais relevantes para predizer se um indivíduo possui remuneração igual ou superior à \$50,000 por ano.
-# 
-# * Como estes cinco atributos se comparam com os 5 atributos que você discutiu na **Questão 6**? 
-# * Se você estivesse próximo da mesma resposta, como esta visualização confirma o seu raciocínio? 
-# * Se você não estava próximo, por que você acha que estes atributos são mais relevantes? 
-
-# **Resposta:**
-
-# ### Selecionando atributos
-# 
-# Como um modelo performa se nós só utilizamos um subconjunto de todos os atributos disponíveis nos dados? Com menos atributos necessários para treinar, a expectativa é que o treinamento e a predição sejam executados em um tempo muito menor — com o custo da redução nas métricas de performance. A partir da visualização acima, nós vemos que os cinco atributos mais importantes contribuem para mais de 50% da importância de **todos** os atributos presentes nos dados. Isto indica que nós podemos tentar *reduzir os atributos* e simplificar a informação necessária para o modelo aprender. O código abaixo utilizará o mesmo modelo otimizado que você encontrou anteriormente e treinará o modelo com o mesmo conjunto de dados de treinamento, porém apenas com *os cinco atributos mais importantes*
-
-# In[ ]:
-
-
-# Importar a funcionalidade para clonar um modelo
-from sklearn.base import clone
-
-# Reduzir a quantidade de atributos
-X_train_reduced = X_train[X_train.columns.values[(np.argsort(importances)[::-1])[:5]]]
-X_test_reduced = X_test[X_test.columns.values[(np.argsort(importances)[::-1])[:5]]]
-
-# Treinar o melhor modelo encontrado com a busca grid anterior
-clf = (clone(best_clf)).fit(X_train_reduced, y_train)
-
-# Fazer novas predições
-reduced_predictions = clf.predict(X_test_reduced)
-
-# Reportar os scores do modelo final utilizando as duas versões dos dados.
-print("Final Model trained on full data\n------")
-print("Accuracy on testing data: {:.4f}".format(accuracy_score(y_test, best_predictions)))
-print("F-score on testing data: {:.4f}".format(fbeta_score(y_test, best_predictions, beta = 0.5)))
-print("\nFinal Model trained on reduced data\n------")
-print("Accuracy on testing data: {:.4f}".format(accuracy_score(y_test, reduced_predictions)))
-print("F-score on testing data: {:.4f}".format(fbeta_score(y_test, reduced_predictions, beta = 0.5)))
-
-
-# ### Questão 8 - Efeitos da seleção de atributos
-# 
-# * Como o F-score do modelo final e o accuracy score do conjunto de dados reduzido utilizando apenas cinco atributos se compara aos mesmos indicadores utilizando todos os atributos? 
-# * Se o tempo de treinamento é uma variável importante, você consideraria utilizar os dados enxutos como seu conjunto de treinamento? 
-# 
-
-# **Resposta:**
-
-# > **Nota**: Uma vez que você tenha concluído toda a implementação de código e respondido cada uma das questões acima, você poderá finalizar o seu trabalho exportando o iPython Notebook como um documento HTML. Você pode fazer isso utilizando o menu acima navegando para 
-# **File -> Download as -> HTML (.html)**. Inclua este documento junto do seu notebook como sua submissão.
-
-# In[ ]:
-
-
-
-
+importances = DecisionTreeClassifier().feature_importances_
